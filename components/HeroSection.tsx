@@ -36,7 +36,7 @@ const HeroSection = () => {
             <p className="text-md md:text-lg">
               Discover movies that match your mood effortlessly.
             </p>
-            <ShimmerButton title="Get Started" onClick={handleClick} />
+            <ShimmerButton title="Discover Movies!" onClick={handleClick} />
           </div>
         </Vortex>
       </div>

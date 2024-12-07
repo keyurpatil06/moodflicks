@@ -1,13 +1,27 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Image from "next/image";
 import LitButton from "./ui/LitButton";
 import { BackgroundBeams } from "./ui/BackgroundBeams";
+import Loader from "./Loader";
+import Link from "next/link";
+import ShimmerButton from "./ui/ShimmerButton";
 
 const MoviesPageClient = ({ movies }: { movies: any[] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const maxIndex = Math.floor(movies.length * 0.7);
+    setCurrentIndex(Math.floor(Math.random() * (maxIndex + 1)));
+  }, [movies.length]);
+
+  if (currentIndex === null) {
+    return (
+      <Loader />
+    )
+  }
 
   const currentMovie = movies[currentIndex];
 
@@ -53,13 +67,21 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
         </p>
       </div>
 
-      <div className="flex gap-4 mt-6">
+      <div className="flex gap-5 mt-6">
         <LitButton
           title='Back'
           onClick={goToBack}
           disabled={currentIndex === 0}
           className={`${currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}>
         </LitButton>
+        <Link
+          href='/discover'
+        >
+          <ShimmerButton 
+            title="Change Mood?"
+            className="border-slate-300 border-[3px] hover:scale-105 transition"
+          />
+        </Link>
         <LitButton
           title='Next'
           onClick={goToNext}
