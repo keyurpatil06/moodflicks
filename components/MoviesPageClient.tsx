@@ -8,6 +8,7 @@ import { BackgroundBeams } from "./ui/BackgroundBeams";
 import Loader from "./Loader";
 import Link from "next/link";
 import ShimmerButton from "./ui/ShimmerButton";
+import { movieGenres } from "@/data";
 
 const MoviesPageClient = ({ movies }: { movies: any[] }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -26,20 +27,31 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
   const currentMovie = movies[currentIndex];
 
   const goToNext = () => {
-    if (currentIndex < movies.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
+    // if (currentIndex < movies.length - 1) {
+    //   setCurrentIndex(currentIndex + 1);
+    // }
+    setCurrentIndex((currentIndex + 1) % movies.length);
   };
 
   const goToBack = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
+    // if (currentIndex > 0) {
+    //   setCurrentIndex(currentIndex - 1);
+    // }
+    setCurrentIndex((currentIndex - 1) % movies.length);
   };
 
   const imageSrc = currentMovie.poster_path
     ? `https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`
     : "/fallback-image.jpg";
+
+  const getCategoryNames = (genreIds: number[]): string[] => {
+    return genreIds
+      .map(genreId => movieGenres.find(genre => genre.id === genreId)?.name)
+      .filter((name): name is string => name !== undefined); // Explicit type guard
+  };
+
+  const genreIds = currentMovie.genre_ids;
+  const categories = getCategoryNames(genreIds);
 
   return (
     <div className="bg-slate-950 min-h-screen text-white flex flex-col items-center justify-center p-4">
@@ -53,10 +65,21 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
             height={800}
             width={300}
             className="rounded-md w-fit h-auto"
+            priority
           />
         </div>
         <h2 className="text-xl font-semibold mb-2">{currentMovie.title}</h2>
-        <p className="text-md mb-1 text-gray-200">
+        <div className="mb-2">
+          {categories.map((category: string) => (
+            <span 
+            key={category}
+            className="px-2 py-1 border-2 text-xs mr-2 rounded-full border-gray-400 text-gray-200 bg-gray-500"
+            >
+              {category}
+              </span>
+          ))}
+        </div>
+        <p className="text-md my-1 text-gray-200">
           {currentMovie.overview}
         </p>
         <p className="text-sm text-gray-400 mb-2">
@@ -71,24 +94,22 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
         <LitButton
           title='Back'
           onClick={goToBack}
-          disabled={currentIndex === 0}
+          // disabled={currentIndex === 0}
           className={`${currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}>
         </LitButton>
-        <Link
-          href='/discover'
-        >
-          <ShimmerButton 
-            title="Change Mood?"
-            className="border-slate-300 border-[3px] hover:scale-105 transition"
-          />
-        </Link>
         <LitButton
           title='Next'
           onClick={goToNext}
-          disabled={currentIndex === movies.length - 1}
+          // disabled={currentIndex === movies.length - 1}
           className={`${currentIndex === movies.length - 1 ? "opacity-50 cursor-not-allowed" : ""}`}>
         </LitButton>
       </div>
+      <Link href='/discover' className="my-4">
+        <ShimmerButton
+          title="Change Mood?"
+          className="border-slate-300 border-2 hover:scale-105 transition whitespace-nowrap"
+        />
+      </Link>
       <BackgroundBeams />
     </div>
   )

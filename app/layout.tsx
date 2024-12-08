@@ -10,7 +10,7 @@ const fontSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "MovieFlicks",
+  title: "MoodFlicks",
   description: "Personalized Movie Recommendations by Mood",
 };
 
