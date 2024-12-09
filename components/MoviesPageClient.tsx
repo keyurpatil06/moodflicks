@@ -9,6 +9,7 @@ import Loader from "./Loader";
 import Link from "next/link";
 import ShimmerButton from "./ui/ShimmerButton";
 import { movieGenres } from "@/data";
+import Footer from "./Footer";
 
 const MoviesPageClient = ({ movies }: { movies: any[] }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -57,7 +58,7 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
     <div className="bg-slate-950 min-h-screen text-white flex flex-col items-center justify-center p-4">
       <Navbar />
 
-      <div className="p-6 mt-32 mx-4 bg-gray-800 rounded-lg shadow-lg md:w-2/5">
+      <div className="p-6 mt-32 mx-4 bg-gray-800 rounded-lg shadow-lg w-fit md:w-2/5">
         <div className="flex items-center justify-center h-fit mb-4">
           <Image
             src={`${imageSrc}`}
@@ -69,24 +70,24 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
           />
         </div>
         <h2 className="text-xl font-semibold mb-2">{currentMovie.title}</h2>
-        <div className="mb-2">
+        <div className="mb-1 flex flex-wrap">
           {categories.map((category: string) => (
-            <span 
-            key={category}
-            className="px-2 py-1 border-2 text-xs mr-2 rounded-full border-gray-400 text-gray-200 bg-gray-500"
+            <span
+              key={category}
+              className="px-2 py-1 border-2 text-xs mr-2 mb-2 rounded-full border-gray-400 text-gray-200 bg-gray-500"
             >
               {category}
-              </span>
+            </span>
           ))}
         </div>
-        <p className="text-md my-1 text-gray-200">
+        <p className="text-md mb-1 text-gray-200">
           {currentMovie.overview}
         </p>
         <p className="text-sm text-gray-400 mb-2">
           Release Date: {currentMovie.release_date || "Unknown"}
         </p>
         <p className="text-sm text-gray-400">
-          Rating: {currentMovie.vote_average || "N/A"}
+          Rating: {currentMovie.vote_average || "N/A"} ⭐
         </p>
       </div>
 
@@ -106,11 +107,12 @@ const MoviesPageClient = ({ movies }: { movies: any[] }) => {
       </div>
       <Link href='/discover' className="my-4">
         <ShimmerButton
-          title="Change Mood?"
-          className="border-slate-300 border-2 hover:scale-105 transition whitespace-nowrap"
+          title="Discover a New Vibe?"
+          className="border-slate-300 border-2 hover:scale-105 transition whitespace-nowrap px-4 font-normal"
         />
       </Link>
       <BackgroundBeams />
+      <Footer />
     </div>
   )
 }
