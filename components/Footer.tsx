@@ -2,7 +2,7 @@ import Link from "next/link"
 
 const Footer = () => {
   return (
-    <footer className="mt-auto">
+    <footer className="mt-auto whitespace-nowrap">
       <span className="tracking-wider">Made by </span>
       <Link
         href="https://github.com/keyurpatil06"
