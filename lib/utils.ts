@@ -5,7 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const movieCache = new Map<string, any>();
+export const setInCache = (key: string, value: any) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(key, JSON.stringify(value));
+};
 
-export const getFromCache = (key: string) => movieCache.get(key);
-export const setInCache = (key: string, value: any) => movieCache.set(key, value);
+export const getFromCache = (key: string) => {
+  if (typeof window === "undefined") return null; // server check
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
+};
