@@ -4,9 +4,10 @@ import { use, useEffect, useState } from "react";
 import Loader from "@/components/Loader";
 import MoviesPageClient from "@/components/MoviesPageClient";
 import { getMoviesByGenre } from "@/lib/actions/movie.actions";
+import { getWithExpiry, setWithExpiry } from "@/lib/utils";
 
 type Props = {
-  params: Promise<{ category: string }>;
+    params: Promise<{ category: string }>;
 };
 
 const MoviesPage = ({ params }: Props) => {
@@ -16,19 +17,18 @@ const MoviesPage = ({ params }: Props) => {
 
     useEffect(() => {
         const fetchMovies = async () => {
-            const cached = localStorage.getItem(category);
+            const cached = getWithExpiry(category);
 
             if (cached) {
-                setMovies(JSON.parse(cached));
+                setMovies(cached);
                 setLoading(false);
                 return;
             }
 
             const data = await getMoviesByGenre(category);
-            
             if (data) {
                 setMovies(data);
-                localStorage.setItem(category, JSON.stringify(data));
+                setWithExpiry(category, data, 24 * 60 * 60 * 1000); // 24 hours
             }
 
             setLoading(false);

@@ -5,13 +5,26 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const setInCache = (key: string, value: any) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(key, JSON.stringify(value));
+export const setWithExpiry = (key: string, value: any, ttl: number) => {
+  const item = {
+    value,
+    expiry: Date.now() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
 };
 
-export const getFromCache = (key: string) => {
-  if (typeof window === "undefined") return null; // server check
-  const item = localStorage.getItem(key);
-  return item ? JSON.parse(item) : null;
+export const getWithExpiry = (key: string) => {
+  const itemStr = localStorage.getItem(key);
+  if (!itemStr) return null;
+
+  try {
+    const item = JSON.parse(itemStr);
+    if (Date.now() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  } catch {
+    return null;
+  }
 };
